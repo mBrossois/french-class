@@ -9,4 +9,21 @@ body {
 
 .header{
   display: flex;
+  justify-content: space-evenly;
+  //padding-top: 2em;
+  box-shadow: 0px 1px 10px #0000008a;
+
+  .custom-demo-tab-bar {
+    .mdc-tab {
+     height: 5em;
+    }
+    .mdc-tab__ripple {
+
+    }
+    .mdc-tab--active {
+      background-color: #f3e5f5
+    }
+    .mdc-tab-indicator {
+    }
+  }
 }
