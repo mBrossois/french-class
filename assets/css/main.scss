@@ -7,11 +7,24 @@ body {
   box-sizing: border-box;
 }
 
+.model {
+  box-shadow: 1px 1px 5px #0000008a;
+  border-radius: 7%;
+  width: 10em;
+  height: 10em;
+  overflow: hidden;
+}
+
+.page-body {
+  display: flex;
+  justify-content: center;
+}
+
 .header{
   display: flex;
   justify-content: space-evenly;
-  //padding-top: 2em;
-  box-shadow: 0px 1px 10px #0000008a;
+  box-shadow: 1px 1px 10px #0000008a;
+  margin-bottom: 25px;
 
   .custom-demo-tab-bar {
     .mdc-tab {
