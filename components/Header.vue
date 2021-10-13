@@ -42,7 +42,7 @@ export default  {
     };
   },
   methods: {
-    updateRoute(url: string, router: VueRouter) {
+    updateRoute(url: string, router: any) {
       router.push(url);
     }
   }
