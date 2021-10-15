@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="progress-bar">
-      <div class="step" v-for="(step, index) in progressBar" :key="index" :class="index === 0 ? 'first' : ''">
+    <div id="progressBarElement" class="progress-bar">
+      <div v-for="(step, index) in progressBar" :key="index" :class="index === 0 ? 'first' : ''" class="step" @click="updateActive(index)">
         <div class="content" :class="active === index ? 'active' : ''">{{ step.value }}</div>
         <div v-if="index !== (progressBar.length - 1)" :class="active > index" class="line"></div>
       </div>
@@ -46,6 +46,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 7em;
       padding: 1em;
       border: 1px solid grey;
       border-radius: 10px;
@@ -57,24 +58,36 @@
   }
 
 }
-
-.arrow.active {
-  background: #81d4fa;
-}
 </style>
 
 <script lang="ts">
-export default {
-  name: "ProgressBar",
-  active: 0,
-  props: {initialProgressBar: {type: Array, default: Array}},
-  data(): any {
-    return {
-      progressBar: this.initialProgressBar,
-      active: 0
-    }
-  },
-  methods: {
+import Vue from "vue";
+import Component from "vue-class-component";
+
+export interface ProgressBarModel {
+  name: string,
+  value: string
+}
+
+const ProgressBarProps = Vue.extend({
+  props: {
+    initialProgressBar: Array
+  }
+})
+
+@Component
+export default class ProgressBar extends ProgressBarProps {
+  progressBar: Array<any> = this.initialProgressBar;
+  active: number = 0;
+
+  increaseActive(): number {
+    return this.active++;
+  };
+
+  updateActive(index: number): number {
+    this.active = (index < this.active) ? index : this.active;
+    return this.active;
   }
 }
+
 </script>
