@@ -1,18 +1,11 @@
 <template>
   <div class="page-body">
     <div class="model">
-      <progress-bar :initial-progress-bar="progressBar"></progress-bar>
-      <div class="model exercise">
-        <ui-textfield v-model="originalSentences" input-type="textarea" required rows="8" cols="40" >
-          Enter the sentence you learned
-        </ui-textfield>
-        <ui-textfield v-model="translatedSentences" input-type="textarea" required rows="8" cols="40">
-          Enter the translation
-        </ui-textfield>
-      </div>
+      <progress-bar ref="progressBarChild" :initial-progress-bar="progressBar"></progress-bar>
+      <exercise-one v-if="active === 0" ref="exerciseOneChild" data-test-id="exercise-one"></exercise-one>
       <div class="buttons">
-        <ui-button outlined>Previous</ui-button>
-        <ui-button @click="goToNextPage()" raised>Next</ui-button>
+        <ui-button outlined @click="goToPreviousPage()">Previous</ui-button>
+        <ui-button raised @click="goToNextPage()" data-test-id="button-next-today-lesson">Next</ui-button>
       </div>
     </div>
   </div>
@@ -28,15 +21,6 @@
 
 }
 
-.model.exercise {
-  display: flex;
-  justify-content: center;
-  width: 40em;
-  height: 40em;
-
-  justify-self: center;
-}
-
 .buttons {
   display: flex;
   justify-content: space-around;
@@ -48,51 +32,44 @@ import Vue from 'vue'
 import Component from "vue-class-component";
 
 import ProgressBar from "~/components/ProgressBar.vue";
+import ExerciseOne from "~/components/ExerciseOne.vue";
 
 @Component({
   components: {
     ProgressBar,
+    ExerciseOne
   }
 })
 export default class TodayLesson extends Vue {
-  originalSentences: Array<String> = [];
-  translatedSentences: Array<String> = [];
   active: number = 0;
 
-  progressBar = [{name: 'enter', value: 'Enter learned'}, {name: 'correction', value: 'Correction'}, {name: 'result', value: "The results"}];
+  progressBar = [{name: 'enter', value: 'Enter learned'}, {name: 'correction', value: 'Correction'}, {
+    name: 'result',
+    value: "The results"
+  }];
+
+  $refs!: {
+    progressBarChild: HTMLFormElement
+  }
+
+  mounted() {
+    this.active = this.$store.getters['todayLessons/GetActive'] as number;
+  }
 
   getActive() {
-    console.log(this.active);
-    this.active =  this.$store.getters["activeLessons"];
+    this.active = this.$store.getters['todayLessons/GetActive'];
+      this.$refs.progressBarChild.setActive();
   }
 
-  public increment() {
-    this.$store.dispatch('modules/counter/increment', 1)
-  }
-
-  public decrement() {
-    this.$store.dispatch('modules/counter/decrement', 1)
+  goToPreviousPage() {
+    this.$store.commit('todayLessons/decrement')
+    this.getActive();
   }
 
   goToNextPage() {
+    this.$store.commit('todayLessons/increment');
     this.getActive();
-    console.log(this.active);
-    // return
   }
 }
-// export default Vue.extend({
-//   components: {ProgressBar},
-//   data() {
-//     return {
-//       progressBar,
-//       originalSentences: [],
-//       translatedSentences: []
-//     };
-//   },
-//   methods: {
-//     goToNextPage() {
-//       // return
-//     }
-//   }
-// })
+
 </script>
